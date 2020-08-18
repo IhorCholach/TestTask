@@ -1,54 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
+
+import actions from './store/actions';
+import ValutesContainer from './containers/ValutesContainer';
+import ValuteContainer from './containers/ValuteContainer';
 
 function App() {
-  let rrr = 10;
-  const array1 = ['a', 'b', 'c'];
+  const dispatch = useDispatch();
+  const start = useSelector((state) => state.valutes.start);
+  const limit = useSelector((state) => state.valutes.limit);
 
-  const ttt = () => {
-    // while (rrr) {
-    //   console.log('rrr', rrr);
-    //   setTimeout(() => console.log(new Date()));
-    //   rrr--;
-    // }
-    // for (let i = 0; i < 10; i++) {
-    //   console.log('cikle', i);
-    //   setTimeout(() => {
-    //     console.log(i);
-    //   });
-    // }
-    // for (const element of array1) {
-    //   console.log('FOR_IN', element);
-    //   setTimeout(() => {
-    //     console.log(element);
-    //   });
-    // }
-    // for (const element in array1) {
-    //   console.log('FOR_OF', element);
-    //   setTimeout(() => {
-    //     console.log(element);
-    //   });
-    // }
-  };
+  useEffect(() => {
+    dispatch(actions.getValutes({ start, limit }));
+    // const interval = setInterval(() => {
+    //   dispatch(actions.getValutes({ start }));
+    // }, 30000);
+    // return () => clearInterval(interval);
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-          <button onClick={ttt}>CLICK</button>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/currency" component={ValutesContainer} />
+        <Route path="/currency/:name" component={ValuteContainer} />
+        <Redirect from="/" to="/currency" />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
